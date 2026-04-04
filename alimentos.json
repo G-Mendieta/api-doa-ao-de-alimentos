@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "nome": "Arroz",
+    "quantidade": 10
+  },
+  {
+    "id": 2,
+    "nome": "Feijão",
+    "quantidade": 5
+  },
+  {
+    "id": 3,
+    "nome": "macarrao",
+    "quantidade": "34"
+  }
+]
