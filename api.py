@@ -58,6 +58,10 @@ def cadastrar_alimento():
 
     if not dados_req or "nome" not in dados_req or "quantidade" not in dados_req:
         return jsonify({"erro": "Campos obrigatórios ausentes"}), 400
+    if not isinstance(dados_req["nome"], str):
+        return jsonify({"erro": "Campo 'nome' deve ser uma string"}), 422
+    elif not isinstance(dados_req["quantidade"], int):
+        return jsonify({"erro": "Campo 'quantidade' deve ser um inteiro"}), 422
 
     novo_id = max((a["id"] for a in alimentos), default=0) + 1
     alimento = {"id": novo_id, "nome": dados_req["nome"], "quantidade": dados_req["quantidade"]}
