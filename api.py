@@ -56,12 +56,21 @@ def obter_instituicao(id):
 def cadastrar_alimento():
     dados_req = request.json
 
-    if not dados_req or "nome" not in dados_req or "quantidade" not in dados_req:
-        return jsonify({"erro": "Campos obrigatórios ausentes"}), 400
+
+    if not dados_req:
+        return jsonify({"erro": "Corpo da requisição ausente ou inválido"}), 400
+
+  
+    if "nome" not in dados_req:
+        return jsonify({"erro": "Campo 'nome' é obrigatório"}), 400
+    if "quantidade" not in dados_req:
+        return jsonify({"erro": "Campo 'quantidade' é obrigatório"}), 400
+
+    
     if not isinstance(dados_req["nome"], str):
         return jsonify({"erro": "Campo 'nome' deve ser uma string"}), 422
-    elif not isinstance(dados_req["quantidade"], int):
-        return jsonify({"erro": "Campo 'quantidade' deve ser um inteiro"}), 422
+    if not isinstance(dados_req["quantidade"], int) or isinstance(dados_req["quantidade"], bool):
+        return jsonify({"erro": "Campo 'quantidade' deve ser um número inteiro"}), 422
 
     novo_id = max((a["id"] for a in alimentos), default=0) + 1
     alimento = {"id": novo_id, "nome": dados_req["nome"], "quantidade": dados_req["quantidade"]}
@@ -77,8 +86,21 @@ def cadastrar_alimento():
 def cadastrar_doador():
     dados_req = request.json
 
-    if not dados_req or "nome" not in dados_req or "email" not in dados_req:
-        return jsonify({"erro": "Campos obrigatórios ausentes"}), 400
+  
+    if not dados_req:
+        return jsonify({"erro": "Corpo da requisição ausente ou inválido"}), 400
+
+    
+    if "nome" not in dados_req:
+        return jsonify({"erro": "Campo 'nome' é obrigatório"}), 400
+    if "email" not in dados_req:
+        return jsonify({"erro": "Campo 'email' é obrigatório"}), 400
+
+  
+    if not isinstance(dados_req["nome"], str):
+        return jsonify({"erro": "Campo 'nome' deve ser um texto"}), 422
+    if not isinstance(dados_req["email"], str):
+        return jsonify({"erro": "Campo 'email' deve ser um texto"}), 422
 
     novo_id = max((d["id"] for d in doadores), default=0) + 1
     doador = {"id": novo_id, "nome": dados_req["nome"], "email": dados_req["email"]}
@@ -94,8 +116,16 @@ def cadastrar_doador():
 def cadastrar_instituicao():
     dados_req = request.json
 
-    if not dados_req or "nome" not in dados_req:
-        return jsonify({"erro": "Campos obrigatórios ausentes"}), 400
+  
+    if not dados_req:
+        return jsonify({"erro": "Corpo da requisição ausente ou inválido"}), 400
+
+   
+    if "nome" not in dados_req:
+        return jsonify({"erro": "Campo 'nome' é obrigatório"}), 400
+
+    if not isinstance(dados_req["nome"], str):
+        return jsonify({"erro": "Campo 'nome' deve ser um texto"}), 422
 
     novo_id = max((i["id"] for i in instituicoes), default=0) + 1
     instituicao = {"id": novo_id, "nome": dados_req["nome"]}
