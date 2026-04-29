@@ -42,6 +42,8 @@ def listar_alimentos():
         resultado = [a for a in resultado if nome in a["nome"].lower()]
     if quantidade:
         resultado = [a for a in resultado if str(a["quantidade"]) == quantidade]
+    if not resultado:
+        return jsonify({"erro": "nenhum alimento encontrado"})   
     return jsonify(resultado), 200
 
 @app.get("/alimentos/<int:id>")
@@ -64,6 +66,8 @@ def listar_doadores():
         resultado = [d for d in resultado if nome in d["nome"].lower()]
     if email:
         resultado = [d for d in resultado if email in d["email"].lower()]
+    if not resultado:
+        return jsonify({"erro": "nenhum doador encontrado"})   
     return jsonify(resultado), 200
 
 @app.get("/doadores/<int:id>")
@@ -72,6 +76,7 @@ def obter_doador(id):
     for doador in doadores:
         if doador["id"] == id:
             return jsonify(doador), 200
+        
     return jsonify({"erro": "Doador não encontrado"}), 404
 
 # ROTAS GET - INSTITUIÇÕES ////////////////////////////////////////////////////
@@ -83,6 +88,8 @@ def listar_instituicoes():
     resultado = instituicoes
     if nome:
         resultado = [i for i in resultado if nome in i["nome"].lower()]
+    if not resultado:
+        return jsonify({"erro": "Nenhuma instituição encontrada"}), 404
     return jsonify(resultado), 200
 
 @app.get("/instituicoes/<int:id>")
