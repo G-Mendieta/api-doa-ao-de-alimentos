@@ -43,7 +43,7 @@ def listar_alimentos():
     if quantidade:
         resultado = [a for a in resultado if str(a["quantidade"]) == quantidade]
     if not resultado:
-        return jsonify({"erro": "nenhum alimento encontrado"})   
+        return jsonify({"erro": "nenhum alimento encontrado"}), 404
     return jsonify(resultado), 200
 
 @app.get("/alimentos/<int:id>")
@@ -67,7 +67,7 @@ def listar_doadores():
     if email:
         resultado = [d for d in resultado if email in d["email"].lower()]
     if not resultado:
-        return jsonify({"erro": "nenhum doador encontrado"})   
+        return jsonify({"erro": "nenhum doador encontrado"}), 404
     return jsonify(resultado), 200
 
 @app.get("/doadores/<int:id>")
@@ -76,7 +76,7 @@ def obter_doador(id):
     for doador in doadores:
         if doador["id"] == id:
             return jsonify(doador), 200
-        
+
     return jsonify({"erro": "Doador não encontrado"}), 404
 
 # ROTAS GET - INSTITUIÇÕES ////////////////////////////////////////////////////
@@ -99,6 +99,7 @@ def obter_instituicao(id):
         if instituicao["id"] == id:
             return jsonify(instituicao), 200
     return jsonify({"erro": "Instituição não encontrada"}), 404
+
 
 # ROTAS POST - ALIMENTOS //////////////////////////////////////////////////////
 
@@ -168,6 +169,10 @@ def atualizar_alimento(id):
     dados_req = request.json
     if not dados_req:
         return jsonify({"erro": "Corpo da requisição ausente ou inválido"}), 400
+    if "nome" in dados_req and not isinstance(dados_req["nome"], str):
+        return jsonify({"erro": "Campo 'nome' deve ser uma string"}), 422
+    if "quantidade" in dados_req and (not isinstance(dados_req["quantidade"], int) or isinstance(dados_req["quantidade"], bool)):
+        return jsonify({"erro": "Campo 'quantidade' deve ser um número inteiro"}), 422
     alimentos = carregar_alimentos()
     for alimento in alimentos:
         if alimento["id"] == id:
@@ -186,6 +191,10 @@ def atualizar_doador(id):
     dados_req = request.json
     if not dados_req:
         return jsonify({"erro": "Corpo da requisição ausente ou inválido"}), 400
+    if "nome" in dados_req and not isinstance(dados_req["nome"], str):
+        return jsonify({"erro": "Campo 'nome' deve ser um texto"}), 422
+    if "email" in dados_req and not isinstance(dados_req["email"], str):
+        return jsonify({"erro": "Campo 'email' deve ser um texto"}), 422
     doadores = carregar_doadores()
     for doador in doadores:
         if doador["id"] == id:
@@ -205,6 +214,8 @@ def atualizar_instituicao(id):
     dados_req = request.json
     if not dados_req:
         return jsonify({"erro": "Corpo da requisição ausente ou inválido"}), 400
+    if "nome" in dados_req and not isinstance(dados_req["nome"], str):
+        return jsonify({"erro": "Campo 'nome' deve ser um texto"}), 422
     instituicoes = carregar_instituicoes()
     for instituicao in instituicoes:
         if instituicao["id"] == id:
